@@ -14,6 +14,15 @@ const config = {
       staticDistDir: "dist",
       url: ["http://localhost/"],
       numberOfRuns: 1,
+      settings: {
+        // Headless Chrome on CI runners frequently fails with NO_FCP (no first
+        // contentful paint) because there is no GPU and /dev/shm is tiny.
+        // Force software rendering so the page paints reliably in CI.
+        chromeFlags: "--no-sandbox --disable-gpu --disable-dev-shm-usage",
+        // Give the app a generous window to reach first paint before the run
+        // is considered done (default 45s; CI runners can be slow).
+        maxWaitForLoad: 60_000,
+      },
     },
     assert: {
       assertions: {
