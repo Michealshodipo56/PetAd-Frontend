@@ -25,8 +25,11 @@ const config = {
       url: ["http://localhost/"],
       numberOfRuns: 1,
       settings: {
-        // Force software rendering: no GPU on CI runners, small /dev/shm.
-        chromeFlags: "--no-sandbox --disable-gpu --disable-dev-shm-usage",
+        // Force software rendering via ANGLE/SwiftShader: CI runners have no GPU.
+        // (--disable-gpu is deliberately NOT used — on new Chrome it can wedge the
+        // compositor in headless mode and cause exactly the NO_FCP we saw.)
+        chromeFlags:
+          "--no-sandbox --disable-dev-shm-usage --use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader",
         // Generous paint/load windows for slow runners (defaults: 30s / 45s).
         maxWaitForFcp: 60_000,
         maxWaitForLoad: 90_000,
